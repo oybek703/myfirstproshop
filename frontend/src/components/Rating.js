@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Rating = ({value, text, color = 'yellow'}) => {
+const Rating = ({value, text, color = '#a7a70f94'}) => {
     return (
         <div className='rating'>
             <span style={{color}}><i className={value >= 1 ? 'fas fa-star' : value >= 0.5 ? 'fas fa-star-half-alt' : 'far fa-star'}></i></span>
