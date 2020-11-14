@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {addToCart, removeFromCart} from "../redux/actions/cart";
-import {Col, Row, ListGroup, Image, Form, Button, Card} from "react-bootstrap";
+import {Col, Row, ListGroup, Image, Form, Button, Card, ListGroupItem} from "react-bootstrap";
 import Message from "../components/Message";
 import {Link} from "react-router-dom";
 
@@ -25,8 +25,8 @@ const CartScreen = ({match, location, history}) => {
                 <h2 className='text-uppercase'>Cart Items</h2>
                 {
                     !cartItems.length
-                        ? <Message variant={'info'}>
-                            Your cart is empty <Link to='/'>Back To Shop</Link>
+                        ? <Message variant={'info'} text={'Your cart is empty'}>
+                                 <Link to='/'>Back To Shop</Link>
                             </Message>
                         : (<ListGroup variant={'flush'}>
                             {
@@ -63,17 +63,25 @@ const CartScreen = ({match, location, history}) => {
             </Col>
             <Col md={4}>
                 <Card>
-                    <Card.Body>
                         <ListGroup variant='flush'>
-                            <h4 className='text-uppercase'>
-                                Subtotal ({cartItems.reduce((acc, item) => acc+=item.qty, 0)}) items
-                                <p className='mt-2'>
-                                <strong>${cartItems.reduce((acc, item) => acc+=item.price * item.qty, 0).toFixed(2)}</strong>
-                                </p>
-                            </h4>
-                            <Button className='btn btn-block' variant='dark' onClick={checkoutHandler}>PROCEED TO CHECKOUT</Button>
+                            <ListGroupItem>
+                                <h4 className='text-uppercase'>
+                                    Subtotal ({cartItems.reduce((acc, item) => acc+=item.qty, 0)}) items
+                                    <p className='mt-2'>
+                                    <strong>${cartItems.reduce((acc, item) => acc+=item.price * item.qty, 0).toFixed(2)}</strong>
+                                    </p>
+                                </h4>
+                            </ListGroupItem>
+                            <ListGroupItem>
+                                <Button
+                                    className='btn btn-block'
+                                    variant='dark'
+                                    onClick={checkoutHandler}
+                                    disabled={!cartItems.length}>
+                                    PROCEED TO CHECKOUT
+                                </Button>
+                            </ListGroupItem>
                         </ListGroup>
-                    </Card.Body>
                 </Card>
             </Col>
         </Row>

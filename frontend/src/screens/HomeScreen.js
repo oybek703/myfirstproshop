@@ -17,8 +17,9 @@ const HomeScreen = () => {
             loading && !error
                 ? <Loader/>
                 : error
-                ? <Message variant={'danger'}
-                           text={'Make sure you are connected to network and try again...'}/>
+                ? <Message variant={'danger'} text={'Oops, something went wrong!'}>
+                    Make sure you are connected to network and try again...
+                </Message>
                 : <>
                 <h2 className='text-uppercase my-1'>Latest Products</h2>
                 <Row>

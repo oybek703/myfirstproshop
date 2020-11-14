@@ -26,7 +26,9 @@ const ProductScreen = ({match, history}) => {
                 loading && !error
                     ? <Loader/>
                     : error
-                        ? <Message variant={'danger'} text={'Make sure you are connected to network and try again...'}/>
+                    ? <Message variant={'danger'} text={'Oops, something went wrong!'}>
+                        Make sure you are connected to network and try again...
+                    </Message>
                         : (<>
                         <Container className='mt-3'>
                             <Link to='/' className='btn btn-light'>Go Back</Link>
