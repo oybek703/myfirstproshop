@@ -5,6 +5,7 @@ const initialState = {
     loading: false,
     error: null
 }
+
 const productListReducer = (state = initialState, action) => {
     const {type, payload} = action;
     switch (type) {
