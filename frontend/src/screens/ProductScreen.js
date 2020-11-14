@@ -3,14 +3,14 @@ import {Col, Container, Image, ListGroup, ListGroupItem, Row, Form} from "react-
 import {Link} from "react-router-dom";
 import Rating from "../components/Rating";
 import {useDispatch, useSelector} from "react-redux";
-import {getProduct} from "../redux/actions/producList";
+import {getProduct} from "../redux/actions/product";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
 const ProductScreen = ({match, history}) => {
     const dispatch = useDispatch();
     const {product, loading, error} = useSelector(state => state.productdetails);
-    const [qty, setQty] = useState(0);
+    const [qty, setQty] = useState(1);
     useEffect(() => {
         dispatch(getProduct(match.params.id));
     }, []);
@@ -23,7 +23,11 @@ const ProductScreen = ({match, history}) => {
     return (
         <>
             {
-                loading && !error ? <Loader/> : error ? <Message variant={'danger'}/> : (<>
+                loading && !error
+                    ? <Loader/>
+                    : error
+                        ? <Message variant={'danger'} text={'Make sure you are connected to network and try again...'}/>
+                        : (<>
                         <Container className='mt-3'>
                             <Link to='/' className='btn btn-light'>Go Back</Link>
                             <Row className='my-2'>

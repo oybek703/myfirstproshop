@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import Product from "../components/Product";
 import {Col, Row} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
-import {getAllProducts} from "../redux/actions/producList";
+import {getAllProducts} from "../redux/actions/product";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 const HomeScreen = () => {
@@ -14,7 +14,12 @@ const HomeScreen = () => {
     return (
         <>
         {
-            loading && !error ? <Loader/> : error ? <Message variant={'danger'}/> :         <>
+            loading && !error
+                ? <Loader/>
+                : error
+                ? <Message variant={'danger'}
+                           text={'Make sure you are connected to network and try again...'}/>
+                : <>
                 <h2 className='text-uppercase my-1'>Latest Products</h2>
                 <Row>
                     {
