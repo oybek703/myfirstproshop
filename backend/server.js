@@ -4,9 +4,12 @@ const errorHandler = require('./middleware/errorMiddleware');
 const notFound = require('./middleware/notFound');
 const connectToDB = require('./database');
 const productRoutes = require('./routes/product');
+const userRoutes = require('./routes/user');
 const app = express();
+app.use(express.json());
 
 app.use('/api/products', productRoutes);
+app.use('/api/users', userRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
