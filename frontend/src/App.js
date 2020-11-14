@@ -9,6 +9,7 @@ import HomeScreen from "./screens/HomeScreen";
 import ProductScreen from "./screens/ProductScreen";
 import {Provider} from "react-redux";
 import store from "./redux/store";
+import CartScreen from "./screens/CartScreen";
 const App = () => {
     return (
         <Provider store={store}>
@@ -18,6 +19,7 @@ const App = () => {
                     <main>
                         <Route path='/' exact component={HomeScreen} />
                         <Route path='/product/:id'  component={ProductScreen} />
+                        <Route path='/cart/:id?'  component={CartScreen} />
                     </main>
                 </Container>
                 <Footer/>
