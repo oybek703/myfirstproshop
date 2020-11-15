@@ -10,6 +10,11 @@ import ProductScreen from "./screens/ProductScreen";
 import {Provider} from "react-redux";
 import store from "./redux/store";
 import CartScreen from "./screens/CartScreen";
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+import ShippingScreen from "./screens/ShippingScreen";
+import PaymentScreen from "./screens/PaymentScreen";
 const App = () => {
     return (
         <Provider store={store}>
@@ -17,9 +22,14 @@ const App = () => {
                 <Header/>
                 <Container>
                     <main>
-                        <Route path='/' exact component={HomeScreen} />
+                        <Route path='/login'  component={LoginScreen} />
+                        <Route path='/shipping'  component={ShippingScreen} />
+                        <Route path='/payment'  component={PaymentScreen} />
+                        <Route path='/register'  component={RegisterScreen} />
+                        <Route path='/profile'  component={ProfileScreen} />
                         <Route path='/product/:id'  component={ProductScreen} />
                         <Route path='/cart/:id?'  component={CartScreen} />
+                        <Route path='/' exact component={HomeScreen} />
                     </main>
                 </Container>
                 <Footer/>
