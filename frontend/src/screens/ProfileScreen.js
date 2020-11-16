@@ -42,6 +42,9 @@ const ProfileScreen = ({history}) => {
             }
         }
     }, [user]);
+    useEffect(() => {
+            dispatch({type: UPDATE_DETAILS_SUCCESS_DONE});
+    }, [])
     return (
             <Row className='mt-5'>
                 <Col md={4}>
