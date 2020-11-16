@@ -4,7 +4,6 @@ import {Form, Button} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
 import {saveShippingAddress} from "../redux/actions/cart";
 import CheckoutSteps from "../components/Checkoutsteps";
-import {Link} from "react-router-dom";
 import {LinkContainer} from 'react-router-bootstrap';
 
 const ShippingScreen = () => {

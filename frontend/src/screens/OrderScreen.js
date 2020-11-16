@@ -1,21 +1,51 @@
-import React, {useEffect} from 'react';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
 import {Card, Col, Container, Image, ListGroup, Row} from "react-bootstrap";
 import Message from "../components/Message";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import Loader from "../components/Loader";
-import {getOrderById} from "../redux/actions/order";
+import {getOrderById, payOrder} from "../redux/actions/order";
+import {PayPalButton} from "react-paypal-button-v2";
+import {ORDER_PAY_RESET} from "../redux/actions/types";
 
 const OrderScreen = ({match}) => {
+    const [sdkKey, setSdkKey] = useState(false);
     const dispatch = useDispatch();
     const {order, loading, error, } = useSelector(state => state.orderDetails);
+    const {success: successPay, loading: loadingPay} = useSelector(state => state.orderPay);
     const {shippingAddress} = order;
+    const successPaymentHandler = (paymentResult) => {
+        dispatch(payOrder(match.params.id, paymentResult));
+    }
     if(!loading) {
         order.itemsPrice = order.orderItems.reduce((acc, item) => acc += item.price * item.qty, 0).toFixed(2);
     }
     useEffect(() => {
-        dispatch(getOrderById(match.params.id));
-    }, []);
+        const addPaypalScript = async () => {
+            const {data: clientId} = await axios.get('/api/config/paypal');
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+            script.async = true;
+            script.onload = () => {
+                setSdkKey(true);
+            }
+            document.body.appendChild(script);
+        }
+        if(!Object.keys(order).length || successPay) {
+            dispatch({type: ORDER_PAY_RESET});
+            dispatch(getOrderById(match.params.id));
+        } else {
+            if(!order.isPaid) {
+                if(!window.paypal) {
+                    addPaypalScript().then(() =>  console.log('Done!'))
+                } else {
+                    setSdkKey(true);
+                }
+            }
+        }
+    }, [successPay]);
     return (
         <div className='mt-4'>
             {loading ? <Loader/> : error ? <Message variant='danger' text='Error! Please try again.'/>  : <Container>
@@ -31,12 +61,14 @@ const OrderScreen = ({match}) => {
                                 {shippingAddress.address} , {shippingAddress.city}  {shippingAddress.postalCode} , {shippingAddress.country}
                                 {!order.isDelivered && <Message variant='warning'>Not delivered.</Message>}
                             </ListGroup.Item>
-                            {/*<*/}
                             <ListGroup.Item>
                                 <h3>PAYMENT METHOD</h3>
                                 <strong>Method: </strong>
                                 {`"${order.paymentMethod}"`}
-                                {!order.isPaid && <Message variant='warning' >Not paid.</Message>}
+                                {!order.isPaid
+                                    ? <Message variant='warning' >Not paid.</Message>
+                                    : <Message variant='success'>Paid on {order.paidAt}</Message>
+                                }
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <h3>ORDER ITEMS</h3>
@@ -109,6 +141,13 @@ const OrderScreen = ({match}) => {
                                             </Col>
                                         </Row>
                                     </ListGroup.Item>
+                                    {
+                                        !order.isPaid && (
+                                            <ListGroup.Item>
+                                                {loadingPay ? <Loader/> : <PayPalButton amount={order.totalPrice} onSuccess={successPaymentHandler}/>}
+                                            </ListGroup.Item>
+                                        )
+                                    }
                                 </ListGroup>
                             </Card.Body>
                         </Card>
