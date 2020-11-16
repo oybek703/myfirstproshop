@@ -5,11 +5,13 @@ const notFound = require('./middleware/notFound');
 const connectToDB = require('./database');
 const productRoutes = require('./routes/product');
 const userRoutes = require('./routes/user');
+const orderRoutes = require('./routes/order');
 const app = express();
 
 app.use(express.json());
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/orders', orderRoutes);
 app.use(notFound);
 app.use(errorHandler);
 

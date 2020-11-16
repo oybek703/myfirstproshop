@@ -19,7 +19,9 @@ const PaymentScreen = ({history}) => {
         <FormContainer>
             <CheckoutSteps step1 step2 step3/>
             <h3 className='text-uppercase'>Payment Method</h3>
-            <Form onChange={handleSubmit}>
+            <fieldset>
+                <legend>Select Payment Method</legend>
+                <Form onChange={handleSubmit}>
                 <Form.Group controlId='paymentMethod'>
                     <Form.Check
                         type='radio'
@@ -33,6 +35,7 @@ const PaymentScreen = ({history}) => {
                     <LinkContainer to='/placeorder'><span>Continue</span></LinkContainer>
                 </Button>
             </Form>
+            </fieldset>
         </FormContainer>
     );
 };
