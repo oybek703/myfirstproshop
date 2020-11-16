@@ -1,4 +1,4 @@
-const protect = require("../middleware/authMiddleware");
+const {protect} = require("../middleware/authMiddleware");
 const asyncHandler = require('../middleware/asyncMiddleware');
 const Order = require('../models/order');
 const {Router} = require('express');

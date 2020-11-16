@@ -2,13 +2,20 @@ import axios from 'axios';
 import {
     ORDER_LIST_MY_RESET,
     UPDATE_DETAILS_FAIL,
-    UPDATE_DETAILS_REQUEST, UPDATE_DETAILS_SUCCESS,
+    UPDATE_DETAILS_REQUEST,
+    UPDATE_DETAILS_SUCCESS, USER_DELETE_FAIL, USER_DELETE_REQUEST, USER_DELETE_SUCCESS,
     USER_DETAILS_FAIL,
-    USER_DETAILS_REQUEST, USER_DETAILS_RESET, USER_DETAILS_SUCCESS,
+    USER_DETAILS_REQUEST,
+    USER_DETAILS_RESET,
+    USER_DETAILS_SUCCESS,
+    USER_LIST_FAIL,
+    USER_LIST_REQUEST, USER_LIST_RESET,
+    USER_LIST_SUCCESS,
     USER_LOGIN_FAIL,
     USER_LOGIN_REQUEST,
     USER_LOGIN_SUCCESS,
-    USER_LOGOUT, USER_REGISTER_FAIL,
+    USER_LOGOUT,
+    USER_REGISTER_FAIL,
     USER_REGISTER_REQUEST,
     USER_REGISTER_SUCCESS
 } from "./types";
@@ -28,6 +35,7 @@ export const logout = () => (dispatch) => {
     localStorage.removeItem('userInfo');
     dispatch({type: ORDER_LIST_MY_RESET});
     dispatch({type: USER_DETAILS_RESET});
+    dispatch({type: USER_LIST_RESET});
     dispatch({type: USER_LOGOUT});
 }
 
@@ -70,5 +78,25 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
         dispatch({type: UPDATE_DETAILS_SUCCESS, payload: data});
     } catch(e) {
        dispatch({type: UPDATE_DETAILS_FAIL, payload: e.message});
+    }
+}
+
+export const listUsers = () => async (dispatch, getState) => {
+    try {
+        dispatch({type: USER_LIST_REQUEST});
+        const {data} = await axios.get('/api/users', {headers: {Authorization: `Bearer ${getState().userLogin.userInfo.token}`}});
+        dispatch({type: USER_LIST_SUCCESS, payload: data });
+    } catch (e) {
+        dispatch({type: USER_LIST_FAIL, payload: e.message});
+    }
+}
+
+export const deleteUser = (id) => async (dispatch, getState) => {
+    try {
+        dispatch({type: USER_DELETE_REQUEST});
+        await axios.delete(`/api/users/${id}`, {headers: {Authorization: `Bearer ${getState().userLogin.userInfo.token}`}})
+        dispatch({type: USER_DELETE_SUCCESS});
+    } catch (e) {
+        dispatch({type: USER_DELETE_FAIL, payload: e.message});
     }
 }

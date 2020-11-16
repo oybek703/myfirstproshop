@@ -2,8 +2,14 @@ const {Router} = require('express');
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('../middleware/asyncMiddleware');
 const User = require('../models/user');
-const protect = require('../middleware/authMiddleware');
+const {protect, admin} = require('../middleware/authMiddleware');
 const router = Router();
+
+//get all users
+router.get('/', [protect, admin], asyncHandler(async (req, res) => {
+    const users = await User.find({});
+    res.status(200).send(users);
+}));
 
 //register user
 router.post('/register', asyncHandler(async (req, res) => {
@@ -58,4 +64,17 @@ router.put('/profile', protect, asyncHandler(async (req, res) => {
         throw new Error('User not found.');
     }
 }));
+
+//delete user
+router.delete('/:id', [protect, admin], asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+    if(user) {
+        await user.remove();
+        res.send({msg: 'User removed.'});
+    } else {
+        res.status(404);
+        throw new Error('User not found.');
+    }
+}));
+
 module.exports = router;
