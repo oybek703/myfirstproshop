@@ -77,4 +77,33 @@ router.delete('/:id', [protect, admin], asyncHandler(async (req, res) => {
     }
 }));
 
+//get user by ID
+router.get('/:id', [protect, admin], asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id).select('-password');
+    if(user) {
+        res.status(200).send(user);
+    } else {
+        res.status(404);
+        res.send({msg: 'User not found.'});
+    }
+}));
+
+//update user by ID
+router.put('/:id', [protect, admin], asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id).select('-password');
+    if(!user) {
+        res.status(404);
+        res.send({msg: 'User not found.'});
+    } else {
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        user.isAdmin = req.body.isAdmin || user.isAdmin;
+        if(req.body.password) {
+            user.password = req.body.password;
+        }
+        const updatedUser = await user.save();
+        res.status(200).send(updatedUser);
+    }
+}));
+
 module.exports = router;
