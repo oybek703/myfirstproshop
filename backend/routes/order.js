@@ -4,6 +4,12 @@ const Order = require('../models/order');
 const {Router} = require('express');
 const router = Router();
 
+// get user orders
+router.get('/my', protect, asyncHandler(async (req, res) => {
+    const orders = await Order.find({user: req.user._id});
+    res.status(200).send(orders);
+}))
+
 //add new order
 router.post('/', protect, asyncHandler(async (req, res) => {
     const {orderItems, shippingAddress, paymentMethod, taxPrice, shippingPrice, totalPrice } = req.body;
@@ -47,5 +53,6 @@ router.put('/:id/pay', protect, asyncHandler(async (req, res) => {
         throw new Error('Order not found.');
     }
 }));
+
 
 module.exports = router;

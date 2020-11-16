@@ -58,7 +58,7 @@ const ShippingScreen = () => {
                         required
                         onChange={(e) => setCountry(e.target.value)}/>
                 </Form.Group>
-                <Button type='submit'>
+                <Button>
                     <LinkContainer to='/payment'><span>Continue</span></LinkContainer>
                 </Button>
             </Form>

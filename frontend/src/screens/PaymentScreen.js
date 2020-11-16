@@ -31,7 +31,7 @@ const PaymentScreen = ({history}) => {
                         onChange={(e) => dispatch(savePaymentMethod(e.target.value))}
                     />
                 </Form.Group>
-                <Button type='submit'>
+                <Button>
                     <LinkContainer to='/placeorder'><span>Continue</span></LinkContainer>
                 </Button>
             </Form>
