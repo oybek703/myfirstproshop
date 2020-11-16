@@ -4,6 +4,7 @@ const Order = require('../models/order');
 const {Router} = require('express');
 const router = Router();
 
+//add new order
 router.post('/', protect, asyncHandler(async (req, res) => {
     const {orderItems, shippingAddress, paymentMethod, taxPrice, shippingPrice, totalPrice } = req.body;
     if(orderItems && !orderItems.length) {
@@ -15,5 +16,16 @@ router.post('/', protect, asyncHandler(async (req, res) => {
     }
 }));
 
+//get order by ID
+router.get('/:id', protect, asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id).populate('user', 'name email');
+    if(!order) {
+        res.status(404);
+        throw new Error('Error not found.');
+    } else  {
+        res.status(200).send(order);
+    }
+
+}));
 
 module.exports = router;
