@@ -24,6 +24,7 @@ const HomeScreen = () => {
                 <h2 className='text-uppercase my-1'>Latest Products</h2>
                 <Row>
                     {
+                        !products.length ? <p className='lead text-muted ml-2 font-italic'>No any products in shop.</p> :
                         products.map(product => (
                                 <Col sm={6} md={4} lg={4} key={product._id}>
                                     <Product key={product._id} product={product}/>

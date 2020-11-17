@@ -9,11 +9,12 @@ import {getOrderById, payOrder} from "../redux/actions/order";
 import {PayPalButton} from "react-paypal-button-v2";
 import {ORDER_PAY_RESET} from "../redux/actions/types";
 
-const OrderScreen = ({match}) => {
+const OrderScreen = ({match, history}) => {
     const [sdkKey, setSdkKey] = useState(false);
     const dispatch = useDispatch();
     const {order, loading, error, } = useSelector(state => state.orderDetails);
-    const {success: successPay, loading: loadingPay} = useSelector(state => state.orderPay);
+    const {userInfo } = useSelector(state => state.userLogin);
+    const {success: successPay, loading: loadingPay, error: orderError} = useSelector(state => state.orderPay);
     const {shippingAddress} = order;
     const successPaymentHandler = (paymentResult) => {
         dispatch(payOrder(match.params.id, paymentResult));
@@ -22,30 +23,34 @@ const OrderScreen = ({match}) => {
         order.itemsPrice = order.orderItems.reduce((acc, item) => acc += item.price * item.qty, 0).toFixed(2);
     }
     useEffect(() => {
-        const addPaypalScript = async () => {
-            const {data: clientId} = await axios.get('/api/config/paypal');
-            const script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
-            script.async = true;
-            script.onload = () => {
-                setSdkKey(true);
-            }
-            document.body.appendChild(script);
-        }
-        if(!Object.keys(order).length || successPay) {
-            dispatch({type: ORDER_PAY_RESET});
-            dispatch(getOrderById(match.params.id));
+        if(!userInfo) {
+            history.push('/');
         } else {
-            if(!order.isPaid) {
-                if(!window.paypal) {
-                    addPaypalScript().then(() =>  console.log('Done!'))
-                } else {
+            const addPaypalScript = async () => {
+                const {data: clientId} = await axios.get('/api/config/paypal');
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+                script.async = true;
+                script.onload = () => {
                     setSdkKey(true);
+                }
+                document.body.appendChild(script);
+            }
+            if(order || successPay) {
+                dispatch({type: ORDER_PAY_RESET});
+                dispatch(getOrderById(match.params.id));
+            } else {
+                if(!order.isPaid) {
+                    if(!window.paypal) {
+                        addPaypalScript().then(() =>  console.log('Done!'))
+                    } else {
+                        setSdkKey(true);
+                    }
                 }
             }
         }
-    }, [successPay]);
+    }, [successPay, userInfo]);
     return (
         <div className='mt-4'>
             {loading ? <Loader/> : error ? <Message variant='danger' text='Error! Please try again.'/>  : <Container>
@@ -144,7 +149,10 @@ const OrderScreen = ({match}) => {
                                     {
                                         !order.isPaid && (
                                             <ListGroup.Item>
-                                                {loadingPay ? <Loader/> : <PayPalButton amount={order.totalPrice} onSuccess={successPaymentHandler}/>}
+                                                {
+                                                    loadingPay || !sdkKey
+                                                    ? <Loader/>
+                                                    : <PayPalButton amount={order.totalPrice} onSuccess={successPaymentHandler}/>}
                                             </ListGroup.Item>
                                         )
                                     }

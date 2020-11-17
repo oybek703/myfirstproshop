@@ -30,20 +30,27 @@ const Header = () => {
                             </LinkContainer>
                             {
                                 userInfo ? (
-                                    <NavDropdown title={userInfo.name} id='username'>
-                                        <LinkContainer to='/profile'>
-                                            <NavDropdown.Item>Profile</NavDropdown.Item>
-                                        </LinkContainer>
-                                        {
-                                            userInfo.isAdmin && (
-                                                    <LinkContainer to='/userslist'>
-                                                        <NavDropdown.Item>Users</NavDropdown.Item>
-                                                    </LinkContainer>
-                                            )
-                                        }
-                                        <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-                                    </NavDropdown>
-                                ) : (
+                                    <>
+                                        {userInfo.isAdmin && (<NavDropdown id='admin' title='ADMIN'>
+                                            <LinkContainer to='/userslist'>
+                                                <NavDropdown.Item>Users</NavDropdown.Item>
+                                            </LinkContainer>
+                                            <LinkContainer to='/productslist'>
+                                                <NavDropdown.Item>Products</NavDropdown.Item>
+                                            </LinkContainer>
+                                            <LinkContainer to='/orderslist'>
+                                                <NavDropdown.Item>Orders</NavDropdown.Item>
+                                            </LinkContainer>
+                                        </NavDropdown>)}
+                                        <NavDropdown title={userInfo.name} id='username'>
+                                            <LinkContainer to='/profile'>
+                                                <NavDropdown.Item>Profile</NavDropdown.Item>
+                                            </LinkContainer>
+                                            <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+                                        </NavDropdown>
+                                    </>
+                                    )
+                                     : (
                                     <LinkContainer to='/login'>
                                         <Nav.Link>
                                             <i className='fas fa-user'></i> {' '}

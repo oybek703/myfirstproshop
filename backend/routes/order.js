@@ -1,4 +1,4 @@
-const {protect} = require("../middleware/authMiddleware");
+const {protect, admin} = require("../middleware/authMiddleware");
 const asyncHandler = require('../middleware/asyncMiddleware');
 const Order = require('../models/order');
 const {Router} = require('express');
@@ -9,6 +9,12 @@ router.get('/my', protect, asyncHandler(async (req, res) => {
     const orders = await Order.find({user: req.user._id});
     res.status(200).send(orders);
 }))
+
+//get all orders
+router.get('/', [protect, admin], asyncHandler(async (req, res) => {
+    const orders = await Order.find({}).populate('user', 'name email');
+    res.send(orders);
+}));
 
 //add new order
 router.post('/', protect, asyncHandler(async (req, res) => {
@@ -53,6 +59,5 @@ router.put('/:id/pay', protect, asyncHandler(async (req, res) => {
         throw new Error('Order not found.');
     }
 }));
-
 
 module.exports = router;

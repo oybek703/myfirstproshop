@@ -5,8 +5,8 @@ import {
     CREATE_ORDER_SUCCESS,
     ORDER_DETAILS_FAIL,
     ORDER_DETAILS_REQUEST,
-    ORDER_DETAILS_SUCCESS,
-    ORDER_LIST_MY_FAIL, ORDER_LIST_MY_REQUEST, ORDER_LIST_MY_SUCCESS,
+    ORDER_DETAILS_SUCCESS, ORDER_LIST_FAIL,
+    ORDER_LIST_MY_FAIL, ORDER_LIST_MY_REQUEST, ORDER_LIST_MY_SUCCESS, ORDER_LIST_REQUEST, ORDER_LIST_SUCCESS,
     ORDER_PAY_FAIL,
     ORDER_PAY_REQUEST,
     ORDER_PAY_SUCCESS
@@ -61,5 +61,15 @@ export const orderListMy = () => async (dispatch, getState) => {
         dispatch({type: ORDER_LIST_MY_SUCCESS, payload: data });
     } catch (e) {
         dispatch({type: ORDER_LIST_MY_FAIL, payload: e.message});
+    }
+}
+
+export const getOrders = () => async (dispatch, getState) => {
+    try {
+        dispatch({type: ORDER_LIST_REQUEST});
+        const {data} = await axios.get('/api/orders', {headers: {Authorization: `Bearer ${getState().userLogin.userInfo.token}`}});
+        dispatch({type: ORDER_LIST_SUCCESS, payload: data});
+    } catch (e) {
+        dispatch({type: ORDER_LIST_FAIL, payload: e.message});
     }
 }
