@@ -4,7 +4,7 @@ import {
     USER_DETAILS_FAIL,
     USER_DETAILS_REQUEST, USER_DETAILS_RESET, USER_DETAILS_SUCCESS,
     USER_REGISTER_FAIL,
-    USER_REGISTER_REQUEST,
+    USER_REGISTER_REQUEST, USER_REGISTER_RESET,
     USER_REGISTER_SUCCESS
 } from "../actions/types";
 
@@ -23,6 +23,8 @@ const userRegisterReducer = (state = initialState, action) => {
             return {...state, loading: false, error: null, userInfo: payload};
         case USER_REGISTER_FAIL:
             return {...state, loading: false, error: payload};
+        case USER_REGISTER_RESET:
+            return {userInfo: null};
         default:
             return state;
     }

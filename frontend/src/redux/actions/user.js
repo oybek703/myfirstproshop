@@ -16,8 +16,8 @@ import {
     USER_LOGIN_SUCCESS,
     USER_LOGOUT,
     USER_REGISTER_FAIL,
-    USER_REGISTER_REQUEST,
-    USER_REGISTER_SUCCESS
+    USER_REGISTER_REQUEST, USER_REGISTER_RESET,
+    USER_REGISTER_SUCCESS, USER_UPDATE_FAIL, USER_UPDATE_REQUEST, USER_UPDATE_SUCCESS
 } from "./types";
 
 export const login = ({email, password}) => async (dispatch, getState) => {
@@ -36,6 +36,7 @@ export const logout = () => (dispatch) => {
     dispatch({type: ORDER_LIST_MY_RESET});
     dispatch({type: USER_DETAILS_RESET});
     dispatch({type: USER_LIST_RESET});
+    dispatch({type: USER_REGISTER_RESET});
     dispatch({type: USER_LOGOUT});
 }
 
@@ -56,7 +57,6 @@ export const getUserProfile = (id) => async (dispatch, getState) => {
         dispatch({type: USER_DETAILS_REQUEST});
         const {data} = await axios.get(`/api/users/${id}`, {
                 headers: {
-                    'Content-Type': 'application/json',
                     Authorization: `Bearer ${getState().userLogin.userInfo.token}`
                 }
             });
@@ -98,5 +98,20 @@ export const deleteUser = (id) => async (dispatch, getState) => {
         dispatch({type: USER_DELETE_SUCCESS});
     } catch (e) {
         dispatch({type: USER_DELETE_FAIL, payload: e.message});
+    }
+}
+
+export const updateUserByID = (user) => async (dispatch, getState) => {
+    try {
+        dispatch({type: USER_UPDATE_REQUEST});
+        const {data} = await axios.put(`/api/users/${user._id}`, user,
+            {headers: {
+                'Content-Type': 'application/json',
+                    Authorization: `Bearer ${getState().userLogin.userInfo.token}`
+                }});
+        dispatch({type: USER_UPDATE_SUCCESS});
+        dispatch({type: USER_DETAILS_SUCCESS, payload: data});
+    } catch (e) {
+        dispatch({type: USER_UPDATE_FAIL, payload: e.message});
     }
 }
