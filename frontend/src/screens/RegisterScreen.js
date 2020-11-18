@@ -30,7 +30,7 @@ const RegisterScreen = ({location, history}) => {
         if(userInfo) {
             history.push('/');
         }
-    }, [])
+    }, [userInfo]);
     return (
         <FormContainer>
             <h1 className='text-center'>Sign Up</h1>
