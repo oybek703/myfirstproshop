@@ -4,7 +4,14 @@ import {productDetailsReducer} from "./productDetails";
 import cartReducer from "./cart";
 import userLoginReducer from "./userLogin";
 import userRegisterReducer, {userDetailsReducer} from "./userRegister";
-import {orderReducer, orderDetailsReducer, orderPayReducer, orderListMyReducer, orderListReducer} from "./orderReducer";
+import {
+    orderReducer,
+    orderDetailsReducer,
+    orderPayReducer,
+    orderListMyReducer,
+    orderListReducer,
+    orderDeliverReducer
+} from "./orderReducer";
 import {updateUserReducer, userDeleteReducer, usersListReducer} from "./usersReducers";
 import {createProductReducer, deleteProductReducer, productUpdateReducer} from "./productsReducers";
 
@@ -21,6 +28,7 @@ const rootReducer = combineReducers({
     createOrder: orderReducer,
     orderDetails: orderDetailsReducer,
     orderPay: orderPayReducer,
+    orderDeliver: orderDeliverReducer,
     orderListMy: orderListMyReducer,
     orderList: orderListReducer,
     userList: usersListReducer,

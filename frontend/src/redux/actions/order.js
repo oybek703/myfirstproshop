@@ -2,7 +2,7 @@ import axios from 'axios';
 import {
     CREATE_ORDER_FAIL,
     CREATE_ORDER_REQUEST,
-    CREATE_ORDER_SUCCESS,
+    CREATE_ORDER_SUCCESS, ORDER_DELIVER_FAIL, ORDER_DELIVER_REQUEST, ORDER_DELIVER_SUCCESS,
     ORDER_DETAILS_FAIL,
     ORDER_DETAILS_REQUEST,
     ORDER_DETAILS_SUCCESS, ORDER_LIST_FAIL,
@@ -51,6 +51,17 @@ export const payOrder = (id, paymentResult) => async (dispatch, getState) => {
         dispatch({type: ORDER_PAY_SUCCESS, payload: data});
     } catch (e) {
         dispatch({type: ORDER_PAY_FAIL, payload: e.message});
+    }
+}
+
+export const orderDeliver = (order) => async (dispatch, getState) => {
+    try {
+        dispatch({type: ORDER_DELIVER_REQUEST});
+        const {data} = await axios.put(`/api/orders/${order._id}/deliver`, {},
+            {headers: {'Content-Type': 'application/json', Authorization: `Bearer ${getState().userLogin.userInfo.token}`}});
+        dispatch({type: ORDER_DELIVER_SUCCESS});
+    } catch (e) {
+        dispatch({type: ORDER_DELIVER_FAIL, payload: e.message});
     }
 }
 

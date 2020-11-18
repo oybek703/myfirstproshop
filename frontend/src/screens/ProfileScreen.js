@@ -3,7 +3,7 @@ import {Button, Col, Form, Row, Table} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
 import Message from "../components/Message";
 import {getUserProfile, updateUserProfile} from "../redux/actions/user";
-import {UPDATE_DETAILS_FAIL, UPDATE_DETAILS_SUCCESS_DONE} from "../redux/actions/types";
+import {UPDATE_DETAILS_FAIL, UPDATE_DETAILS_RESET} from "../redux/actions/types";
 import {orderListMy} from "../redux/actions/order";
 import Loader from "../components/Loader";
 import {Link} from "react-router-dom";
@@ -25,12 +25,10 @@ const ProfileScreen = ({history}) => {
             dispatch({type: UPDATE_DETAILS_FAIL, payload: 'Invalid password confirmation'});
         } else {
             dispatch(updateUserProfile({name, email, password}));
+            dispatch({type: UPDATE_DETAILS_RESET});
             setPassword('');
             setPasswordConfirm('');
             setMessage('');
-            setTimeout(() => {
-                dispatch({type: UPDATE_DETAILS_SUCCESS_DONE});
-            }, 2000)
         }
     }
     useEffect(() => {
@@ -43,14 +41,17 @@ const ProfileScreen = ({history}) => {
                 setName(user.name);
                 setEmail(user.email);
             }
+            setTimeout(() => {
+                dispatch({type: UPDATE_DETAILS_RESET});
+            }, 2000)
             dispatch(orderListMy());
         }
-    }, [userInfo, user]);
+    }, [userInfo, user, success]);
     return (
             <Row className='mt-5'>
                 <Col md={4}>
                     {message && <Message variant='danger'>{message}</Message>}
-                    {success && <Message variant='success'>Profile updated.</Message>}
+                    {success && <Message variant='success'>Profile is updated.</Message>}
                     <h3 className='text-uppercase'>User Profile</h3>
                      <Form onSubmit={handleSubmit}>
                         <Form.Group controlId={'name'}>
