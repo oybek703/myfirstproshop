@@ -17,6 +17,12 @@ app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/uploads', uploadRoutes)
 app.get('/api/config/paypal', (req, res) => res.send(process.env.PAYPAL_CLIENT_ID));
+if(process.env.NODE_ENV === 'production')  {
+    app.use(express.static(path.resolve('./', 'frontend/build')));
+    app.get('*', (req, res) => res.sendFile(path.resolve('./', 'frontend/build/index.html')));
+} else {
+    app.get('/', (req, res) => res.send('Api is running...'));
+}
 app.use(notFound);
 app.use(errorHandler);
 

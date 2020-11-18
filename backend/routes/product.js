@@ -4,10 +4,21 @@ const asyncHandler = require('../middleware/asyncMiddleware');
 const {protect, admin} = require('../middleware/authMiddleware');
 const router = Router();
 
+//get top rated products
+router.get('/top', asyncHandler(async (req, res) => {
+    const products = await Product.find({}).sort({rating: -1}).limit(3);
+    res.send(products);
+}));
+
 //get all products
 router.get('/', asyncHandler(async (req, res) => {
-    const products = await Product.find();
-    res.status(200).send(products);
+    const pageSize = 3;
+    const page = Number(req.query.pageNumber) || 1;
+    const {keyword} = req.query;
+    const search = keyword ? {name: {$regex: keyword, $options: 'i'}} : {};
+    const count = await Product.countDocuments({});
+    const products = await Product.find({...search}).limit(pageSize).skip(pageSize * (page - 1));
+    res.status(200).send({products, page, pages: Math.ceil(count / pageSize)});
 }));
 
 // get single product
