@@ -13,16 +13,16 @@ import {
     PRODUCT_DETAILS_SUCCESS,
     PRODUCT_LIST_FAIL,
     PRODUCT_LIST_REQUEST,
-    PRODUCT_LIST_SUCCESS,
+    PRODUCT_LIST_SUCCESS, PRODUCT_TOP_FAIL, PRODUCT_TOP_REQUEST, PRODUCT_TOP_SUCCESS,
     PRODUCT_UPDATE_FAIL,
     PRODUCT_UPDATE_REQUEST,
     PRODUCT_UPDATE_SUCCESS
 } from "./types";
 
-export const getAllProducts = () => async (dispatch) => {
+export const getAllProducts = (keyword = '', pageNumber = '') => async (dispatch) => {
     try {
         dispatch({type: PRODUCT_LIST_REQUEST});
-        const res = await axios.get('/api/products');
+        const res = await axios.get(`/api/products?keyword=${keyword}&pageNumber=${pageNumber}`);
         dispatch({type: PRODUCT_LIST_SUCCESS, payload: res.data});
     } catch (e) {
         dispatch({type: PRODUCT_LIST_FAIL, payload: e.message});
@@ -36,6 +36,16 @@ export const getProduct = (id) => async (dispatch) => {
         dispatch({type: PRODUCT_DETAILS_SUCCESS, payload: res.data});
     } catch (e) {
         dispatch({type: PRODUCT_DETAILS_FAIL, payload: e.message});
+    }
+}
+
+export const getTops = () => async (dispatch) => {
+    try {
+        dispatch({type: PRODUCT_TOP_REQUEST});
+        const {data} = await axios.get('/api/products/top');
+        dispatch({type: PRODUCT_TOP_SUCCESS, payload: data});
+    } catch (e) {
+        dispatch({type: PRODUCT_TOP_FAIL, payload: e.message});
     }
 }
 

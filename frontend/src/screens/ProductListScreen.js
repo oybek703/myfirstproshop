@@ -6,10 +6,12 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import {Link} from "react-router-dom";
 import {PRODUCT_CREATE_RESET} from "../redux/actions/types";
+import Paginate from "../components/Paginate";
 
-const ProductListScreen = ({history}) => {
+const ProductListScreen = ({history, match}) => {
+    const {pageNumber} = match.params;
     const dispatch = useDispatch();
-    const {products, loading, error} = useSelector(state => state.productlist);
+    const {products, loading, error, pages, page} = useSelector(state => state.productlist);
     const {userInfo} = useSelector(state => state.userLogin);
     const {product, success: createProductSuccess, loading: createProductLoading} = useSelector(state => state.createProduct);
     const {success: deleteProductSuccess, error: deleteProductError, loading: deleteProductLoading } = useSelector(state => state.deleteProduct);
@@ -29,10 +31,10 @@ const ProductListScreen = ({history}) => {
             dispatch({type: PRODUCT_CREATE_RESET});
             history.push(`/products/${product._id}/edit`);
         } else {
-            dispatch(getAllProducts());
+            dispatch(getAllProducts('', pageNumber));
         }
     }
-    }, [deleteProductSuccess, userInfo, createProductSuccess]);
+    }, [deleteProductSuccess, userInfo, createProductSuccess, pageNumber]);
     return (
         <Container className='mt-3'>
             <Row className='d-flex align-items-center justify-content-between'>
@@ -50,7 +52,8 @@ const ProductListScreen = ({history}) => {
                     : error
                         ? <Message variant='danger'>Something went wrong. Please try again.</Message>
                         : (
-                            <Table bordered hover responsive striped className='table-sm'>
+                            <>
+                                <Table bordered hover responsive striped className='table-sm'>
                                 <thead>
                                 <tr>
                                     <th>ID</th>
@@ -91,6 +94,8 @@ const ProductListScreen = ({history}) => {
                                     }
                                 </tbody>
                             </Table>
+                                <Paginate page={page} pages={pages} isAdmin/>
+                            </>
                     )
             }
         </Container>

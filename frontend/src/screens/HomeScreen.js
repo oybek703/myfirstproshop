@@ -5,14 +5,21 @@ import {useDispatch, useSelector} from "react-redux";
 import {getAllProducts} from "../redux/actions/product";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-const HomeScreen = () => {
+import Paginate from "../components/Paginate";
+import ProductCarousel from "../components/ProductCarousel";
+import Meta from "../components/Meta";
+import {Link} from "react-router-dom";
+const HomeScreen = ({match}) => {
+    const {keyword, pageNumber} = match.params;
     const dispatch = useDispatch();
-    const {products, error, loading} = useSelector(state => state.productlist);
+    const {products, error, loading, pages, page} = useSelector(state => state.productlist);
     useEffect(() => {
-        dispatch(getAllProducts());
-    }, [])
+        dispatch(getAllProducts(keyword, pageNumber));
+    }, [keyword, pageNumber]);
     return (
         <>
+            <Meta/>
+            {!keyword ? <ProductCarousel/> : <Link to='/' className='btn btn-light mt-2'>Go Back</Link>}
         {
             loading && !error
                 ? <Loader/>
@@ -33,6 +40,7 @@ const HomeScreen = () => {
                         )
                     }
                 </Row>
+                <Paginate pages={pages} page={page} keyword={keyword ? keyword : ''}/>
             </>
         }
         </>

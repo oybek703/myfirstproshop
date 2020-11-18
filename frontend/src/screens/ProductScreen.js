@@ -7,6 +7,7 @@ import {createReview, getProduct} from "../redux/actions/product";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import {PRODUCT_CREATE_REVIEW_RESET} from "../redux/actions/types";
+import Meta from "../components/Meta";
 
 const ProductScreen = ({match, history}) => {
     const dispatch = useDispatch();
@@ -44,6 +45,7 @@ const ProductScreen = ({match, history}) => {
                         Make sure you are connected to network and try again...
                     </Message>
                         : (<>
+                        <Meta title={product.name}/>
                         <Container className='mt-3'>
                             <Link to='/' className='btn btn-light'>Go Back</Link>
                             <Row className='my-2'>

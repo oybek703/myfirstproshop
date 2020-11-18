@@ -16,13 +16,14 @@ import {updateUserReducer, userDeleteReducer, usersListReducer} from "./usersRed
 import {
     createProductReducer,
     deleteProductReducer,
-    productCreateReviewReducer,
+    productCreateReviewReducer, productTopReducer,
     productUpdateReducer
 } from "./productsReducers";
 
 const rootReducer = combineReducers({
     cart: cartReducer,
     productlist: productListReducer,
+    productTop: productTopReducer,
     productdetails: productDetailsReducer,
     productUpdate:  productUpdateReducer,
     productCreateReview: productCreateReviewReducer,
