@@ -13,13 +13,19 @@ import {
     orderDeliverReducer
 } from "./orderReducer";
 import {updateUserReducer, userDeleteReducer, usersListReducer} from "./usersReducers";
-import {createProductReducer, deleteProductReducer, productUpdateReducer} from "./productsReducers";
+import {
+    createProductReducer,
+    deleteProductReducer,
+    productCreateReviewReducer,
+    productUpdateReducer
+} from "./productsReducers";
 
 const rootReducer = combineReducers({
     cart: cartReducer,
     productlist: productListReducer,
     productdetails: productDetailsReducer,
     productUpdate:  productUpdateReducer,
+    productCreateReview: productCreateReviewReducer,
     createProduct: createProductReducer,
     deleteProduct: deleteProductReducer,
     userLogin: userLoginReducer,

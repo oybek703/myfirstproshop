@@ -21,7 +21,9 @@ const RegisterScreen = ({location, history}) => {
             setMessage('Invalid password confirmation.');
         } else {
             dispatch(register({name, email, password}));
-            history.push('');
+            if(userInfo) {
+                history.push('/');
+            }
         }
     }
     useEffect(() => {

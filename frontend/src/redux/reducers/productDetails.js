@@ -2,7 +2,7 @@ import {PRODUCT_DETAILS_FAIL, PRODUCT_DETAILS_REQUEST, PRODUCT_DETAILS_SUCCESS} 
 
 const initialState =  {
     product: {},
-    loading: false,
+    loading: true,
     error: null
 }
 

@@ -11,7 +11,9 @@ const CartScreen = ({match, location, history}) => {
     const qty = Number(location.search.split('=')[1]);
     const {id} = match.params;
     useEffect(() => {
-        dispatch(addToCart(id, qty));
+        if(id) {
+            dispatch(addToCart(id, qty));
+        }
     }, []);
     const removeHandler = (id) => {
         dispatch(removeFromCart(id));

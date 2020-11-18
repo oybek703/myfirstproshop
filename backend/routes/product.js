@@ -13,7 +13,7 @@ router.get('/', asyncHandler(async (req, res) => {
 // get single product
 router.get('/:id', asyncHandler(async (req, res) => {
     const {id} = req.params;
-    const product = await Product.findById(id);
+    const product = await Product.findById(id).populate('user', 'name email');
     if(!product) {
         return res.status(404).send({msg: 'Product not  found.'});
     }
@@ -64,6 +64,28 @@ router.put('/:id', [protect, admin], asyncHandler(async (req, res) => {
     } else {
         res.status(404);
         throw new Error('Product not found.');
+    }
+}));
+
+//add review for product
+router.post('/:id/reviews', protect, asyncHandler(async (req, res) => {
+    const {rating, comment} = req.body;
+    const product = await Product.findById(req.params.id);
+    if(!product) {
+        res.status(404);
+        throw new Error('Product not found.');
+    } else {
+        const alreadyReviewed = product.reviews.find(r => r.user.toString() === req.user._id.toString());
+        if(alreadyReviewed) {
+            res.status(400);
+            throw new Error('Product is already reviewed.');
+        } else {
+            product.reviews.push({name: req.user.name, rating: Number(rating), comment, user: req.user._id});
+            product.numReviews = product.reviews.length;
+            product.rating = product.reviews.reduce((acc, review) => acc+=review.rating, 0) / product.reviews.length;
+            await product.save();
+            res.status(201).send({msg: 'Product reviewed.'});
+        }
     }
 }));
 
