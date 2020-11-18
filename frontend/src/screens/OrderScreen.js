@@ -31,6 +31,7 @@ const OrderScreen = ({match, history}) => {
             history.push('/');
         } else {
             const addPaypalScript = async () => {
+                console.log('Attempting for PayPal SDKKey...');
                 const {data: clientId} = await axios.get('/api/config/paypal');
                 const script = document.createElement('script');
                 script.type = 'text/javascript';
@@ -158,10 +159,10 @@ const OrderScreen = ({match, history}) => {
                                     {
                                         !order.isPaid && (
                                             <ListGroup.Item>
-                                                {
-                                                    loadingPay || !sdkKey
+                                                {loadingPay
                                                     ? <Loader/>
-                                                    : <PayPalButton amount={order.totalPrice} onSuccess={successPaymentHandler}/>}
+                                                    : <PayPalButton amount={order.totalPrice} onSuccess={successPaymentHandler}/>
+                                                }
                                             </ListGroup.Item>
                                         )
                                     }
