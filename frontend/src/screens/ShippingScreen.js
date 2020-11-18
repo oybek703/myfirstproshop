@@ -6,7 +6,7 @@ import {saveShippingAddress} from "../redux/actions/cart";
 import CheckoutSteps from "../components/Checkoutsteps";
 import {LinkContainer} from 'react-router-bootstrap';
 
-const ShippingScreen = () => {
+const ShippingScreen = ({history}) => {
     const {shippingAddress} = useSelector(state => state.cart);
     const dispatch = useDispatch();
     const [address, setAddress] = useState(shippingAddress.address);
@@ -16,6 +16,7 @@ const ShippingScreen = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         dispatch(saveShippingAddress({city, address, postalCode, country}));
+        history.push('/payment');
     }
     return (
         <FormContainer>
@@ -58,8 +59,8 @@ const ShippingScreen = () => {
                         required
                         onChange={(e) => setCountry(e.target.value)}/>
                 </Form.Group>
-                <Button>
-                    <LinkContainer to='/payment'><span>Continue</span></LinkContainer>
+                <Button type='submit' variant='dark'>
+                    Continue
                 </Button>
             </Form>
         </FormContainer>
